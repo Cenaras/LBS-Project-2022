@@ -50,17 +50,6 @@ pub fn trace_vars(attr: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 
-
-
-
-
-/*
-    macro_rules! gen_lattice_contract(...)
-
-
-*/
-
-
 /*fn impl_hello_macro(ast: &syn::DeriveInput) -> TokenStream {
     let name = &ast.ident;
     let gen = quote! {
