@@ -1,42 +1,32 @@
-extern crate proc_macro;
-use proc_macro::{TokenStream};
-use quote::{quote};
-use std::collections::HashSet;
-use syn::parse::{Parse, ParseStream, Result};
-use syn::punctuated::Punctuated;
-use syn::{Ident, Token, parse_macro_input, DeriveInput};
 
-struct Args{
-    vars:HashSet<Ident>
-}
-
-impl Parse for Args{
-    fn parse(input: ParseStream) -> Result<Self> {
-        // parses a,b,c, or a,b,c where a,b and c are Indent
-        let vars = Punctuated::<Ident, Token![,]>::parse_terminated(input)?;
-        Ok(Args {
-            vars: vars.into_iter().collect(),
-        })
-    }
-}
+use proc_macro::{self, TokenStream};
+use syn::{DeriveInput, Ident};
+use quote::{quote, ToTokens};
 
 #[proc_macro_attribute]
-pub fn my_custom_attribute(_metadata: TokenStream, _input: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(_input as DeriveInput);
-    let met = parse_macro_input!(_metadata as Args);
-    let name = input.ident;
-    let attrs = input.attrs;
-    println!("Name is {}", name);
-    println!("Name is {:?}", met.vars);
-    TokenStream::from(quote!{struct H{}})
+pub fn my_custom_attribute(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let ast: DeriveInput = syn::parse(item).unwrap();
+    let arg: Ident = syn::parse(attr).unwrap();
+    let name: Ident = ast.ident.clone();
+    //ast.ident = arg;
+    println!("AST of item is: {}", name);
+
+    
+    impl_hello_macro(&ast)
+    //ast.to_token_stream()
 }
 
-
-
-
-
-
-
+fn impl_hello_macro(ast: &syn::DeriveInput) -> TokenStream {
+    let name = &ast.ident;
+    let gen = quote! {
+        impl HelloMacro for #name {
+            fn hello_macro() {
+                println!("Hello, Macro! My name is {}!", stringify!(#name));
+            }
+        }
+    };
+    gen.into()
+}
 
 
 
