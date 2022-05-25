@@ -1,13 +1,14 @@
 use hello_macro_derive::*;
 
-/*
-#[lattice_address(A)]
-struct S{
+
+#[lattice_address(0x01)]
+struct State {
     test: u32,
-}*/
+}
+
 
 // This inserts a print...
-#[trace_vars(Player)]
+#[level(Player)]
 fn test() {
     // if (S.le(stuff, stuff))
     println!("test");
@@ -19,3 +20,7 @@ fn test_macro() {
     test();
 }
 
+#[test]
+fn test_struct() {
+    State::print();
+}
