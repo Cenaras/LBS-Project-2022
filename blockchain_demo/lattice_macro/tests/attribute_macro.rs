@@ -1,11 +1,9 @@
-use hello_macro_derive::*;
-
+use lattice_macro::*;
 
 #[lattice_address(0x01)]
 struct State {
     test: u32,
 }
-
 
 // This inserts a print...
 #[level(Player)]

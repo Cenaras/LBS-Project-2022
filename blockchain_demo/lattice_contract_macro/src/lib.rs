@@ -1,21 +1,39 @@
 extern crate paste;
 
-type LatticeElement = String;
-
 #[macro_export]
 macro_rules! gen_lattice_contract {
     // Check at ting givet med er rigtige typer gennem match
-    ($lattice:expr, $raise_level:expr, $deploy_level:expr) => {
+    ($lattice_name:ident, $lattice_elements:expr, $lattice_order:expr, $raise_level:expr, $deploy_level:expr) => {
+        use std::collections::HashMap;
+        type LatticeElement = String;
+        type Address = String;
 
-            pub fn deploy_contract() {
+        struct $lattice_name {
+            map: HashMap<Address, LatticeElement>,
+        }
+
+        impl $lattice_name {
+            pub fn new(owner: Address) -> Self {
+                let mut map = HashMap::new();
+                map.insert(owner, String::from("top"));
+                Self { map }
+            }
+
+            pub fn deploy_contract(&mut self) {
                 println!("Deploy if level  > {}", $deploy_level);
             }
 
-            pub fn raise_level() {
+            pub fn raise_level(&mut self) {
+                let elements = $lattice_elements;
                 // Arguments for target level
                 println!("Raise level of user if caller level > {}", $raise_level);
             }
 
+            pub fn le(&mut self, address1: Address, address2: Address) -> bool {
+                $lattice_order(address1, address2)
+            }
+
+        }
     };
 }
 
