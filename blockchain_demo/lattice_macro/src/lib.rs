@@ -40,16 +40,21 @@ pub fn lattice_address(attr: TokenStream, item: TokenStream) -> TokenStream {
     let input_struct = parse_macro_input!(item as ItemStruct);
     let name = input_struct.ident.clone();
     let addr = parse_macro_input!(attr as LitStr);
+    let addr2 = &stringify!(#addr).to_string();
     TokenStream::from(quote! {
         #input_struct
         impl #name {
-            fn raise_level(&self, address: String, level: String) {
+            fn get_blockchain(&self) -> &Blockchain {
+                &self.blockchain
+            }
+            
+            fn raise_level(&self, address: &String, level: &String) {
                 // blockchain_call simulates a blockchain transaction to the entity present at its argument
-                lattice_contract(#addr).raise_level(self.address, address, level);
+                self.get_blockchain().get_lattice_contract(&stringify!(#addr).to_string()).raise_level(&self.address, address, level);
             }
 
-            fn le(&self, level1: String, level2: String) {
-                lattice_contract(#addr).le(level1, level2);
+            fn le(&self, level1: &String, level2: &String) {
+                self.get_blockchain().get_lattice_contract(&stringify!(#addr).to_string()).le(level1, level2);
             }
         }
     })

@@ -8,6 +8,7 @@ macro_rules! gen_lattice_contract {
         type LatticeElement = String;
         type Address = String;
 
+        #[derive(Clone)]
         struct $lattice_name {
             map: HashMap<Address, LatticeElement>,
         }
