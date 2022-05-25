@@ -1,9 +1,10 @@
-use proc_macro::{self, TokenStream};
+use proc_macro::{self, TokenStream, Literal};
 use quote::{quote, ToTokens};
 use syn::fold::{self, Fold};
-use syn::{parse_macro_input, parse_quote, Block, DeriveInput, Ident, ItemFn, ItemStruct};
+use syn::{parse_macro_input, parse_quote, Block, DeriveInput, Ident, ItemFn, ItemStruct, LitStr};
+use syn::parse::{Parse};
 
-fn insert_print(id: Ident, node: ItemFn) -> ItemFn {
+fn insert_print(id: LitStr, node: ItemFn) -> ItemFn {
     let block = node.block;
     let mut stmts = block.stmts;
     stmts.insert(
@@ -28,7 +29,7 @@ fn insert_print(id: Ident, node: ItemFn) -> ItemFn {
 #[proc_macro_attribute]
 pub fn level(attr: TokenStream, item: TokenStream) -> TokenStream {
     let input_fn = parse_macro_input!(item as ItemFn);
-    let arg: Ident = syn::parse(attr).unwrap();
+    let arg = parse_macro_input!(attr as LitStr);
 
     let output = insert_print(arg, input_fn);
     TokenStream::from(quote! {#output})
@@ -38,11 +39,17 @@ pub fn level(attr: TokenStream, item: TokenStream) -> TokenStream {
 pub fn lattice_address(attr: TokenStream, item: TokenStream) -> TokenStream {
     let input_struct = parse_macro_input!(item as ItemStruct);
     let name = input_struct.ident.clone();
+    let addr = parse_macro_input!(attr as LitStr);
     TokenStream::from(quote! {
         #input_struct
         impl #name {
-            fn print() {
-                println!("Hello macro");
+            fn raise_level(&self, address: String, level: String) {
+                // blockchain_call simulates a blockchain transaction to the entity present at its argument
+                lattice_contract(#addr).raise_level(self.address, address, level);
+            }
+
+            fn le(&self, level1: String, level2: String) {
+                lattice_contract(#addr).le(level1, level2);
             }
         }
     })

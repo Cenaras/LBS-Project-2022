@@ -3,7 +3,7 @@ extern crate paste;
 #[macro_export]
 macro_rules! gen_lattice_contract {
     // Check at ting givet med er rigtige typer gennem match
-    ($lattice_name:ident, $lattice_elements:expr, $lattice_order:expr, $raise_level:expr, $deploy_level:expr) => {
+    ($lattice_name:ident, $lattice_elements:expr, $lattice_order:expr, $raise_level:expr) => {
         use std::collections::HashMap;
         type LatticeElement = String;
         type Address = String;
@@ -13,26 +13,38 @@ macro_rules! gen_lattice_contract {
         }
 
         impl $lattice_name {
-            pub fn new(owner: Address) -> Self {
+            pub fn new(caller_address: Address) -> Self {
                 let mut map = HashMap::new();
-                map.insert(owner, String::from("top"));
+                map.insert(caller_address, String::from("top"));
                 Self { map }
             }
 
-            pub fn deploy_contract(&mut self) {
-                println!("Deploy if level  > {}", $deploy_level);
-            }
-
-            pub fn raise_level(&mut self) {
+            // Raise the level of an address. Use this to deploy contracts, by raising contract level to desired.
+            pub fn raise_level(
+                &mut self,
+                caller_address: &Address,
+                address: &Address,
+                target_level: &LatticeElement,
+            ) {
                 let elements = $lattice_elements;
+                let bot = String::from("bot");
+                let caller_level = self.map.get(caller_address).unwrap_or(&bot);
+
+                // Ensure that caller has appropiate level to perform raise_level
+                assert!(self.le($raise_level, caller_level));
+                // Ensure that you cannot raise up to your own level
+                assert!(self.le(target_level, caller_level) && target_level.ne(caller_level));
+
+                self.map
+                    .insert(address.to_string(), target_level.to_string());
+
                 // Arguments for target level
                 println!("Raise level of user if caller level > {}", $raise_level);
             }
 
-            pub fn le(&mut self, address1: Address, address2: Address) -> bool {
+            pub fn le(&self, address1: &Address, address2: &Address) -> bool {
                 $lattice_order(address1, address2)
             }
-
         }
     };
 }

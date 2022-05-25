@@ -1,12 +1,12 @@
 use lattice_macro::*;
 
-#[lattice_address(0x01)]
+#[lattice_address("0x01")]
 struct State {
     test: u32,
 }
 
 // This inserts a print...
-#[level(Player)]
+#[level("allowed")]
 fn test() {
     // if (S.le(stuff, stuff))
     println!("test");
