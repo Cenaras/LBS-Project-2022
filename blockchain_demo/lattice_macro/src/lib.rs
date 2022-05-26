@@ -4,16 +4,23 @@ use syn::fold::{self, Fold};
 use syn::{parse_macro_input, parse_quote, Block, DeriveInput, Ident, ItemFn, ItemStruct, LitStr};
 use syn::parse::{Parse};
 
-fn insert_print(id: LitStr, node: ItemFn) -> ItemFn {
+fn insert_print(function_level: LitStr, node: ItemFn) -> ItemFn {
     let block = node.block;
     let mut stmts = block.stmts;
+    let required_level = function_level.value();
+
     stmts.insert(
         0,
-        parse_quote! {
-            println!("Arg is {}", stringify!(#id));
+        parse_quote!{
+            let level = self.get_level(lattice_contracts, caller_address);
         },
     );
-
+    stmts.insert(
+        1,
+        parse_quote!{
+            assert!(self.le(lattice_contracts, &#required_level.to_string(), &level));
+        },
+    );
     // Return updated node, with inserted stuff in block stamtements
     ItemFn {
         attrs: node.attrs,
@@ -32,7 +39,7 @@ pub fn level(attr: TokenStream, item: TokenStream) -> TokenStream {
     let arg = parse_macro_input!(attr as LitStr);
 
     let output = insert_print(arg, input_fn);
-    TokenStream::from(quote! {#output})
+    TokenStream::from(quote!{#output})
 }
 
 #[proc_macro_attribute]
@@ -44,17 +51,13 @@ pub fn lattice_address(attr: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(quote! {
         #input_struct
         impl #name {
-            fn get_blockchain(&self) -> &Blockchain {
-                &self.blockchain
-            }
-            
-            fn raise_level(&self, address: &String, level: &String) {
+            fn raise_level(address: &String, level: &String) {
                 // blockchain_call simulates a blockchain transaction to the entity present at its argument
-                self.get_blockchain().get_lattice_contract(&stringify!(#addr).to_string()).raise_level(&self.address, address, level);
+                self.get_lattice_contract(&stringify!(#addr).to_string()).raise_level(&self.address, address, level);
             }
 
-            fn le(&self, level1: &String, level2: &String) {
-                self.get_blockchain().get_lattice_contract(&stringify!(#addr).to_string()).le(level1, level2);
+            fn le(level1: &String, level2: &String) {
+                self.get_lattice_contract(&stringify!(#addr).to_string()).le(level1, level2);
             }
         }
     })

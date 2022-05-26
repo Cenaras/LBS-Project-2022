@@ -43,8 +43,12 @@ macro_rules! gen_lattice_contract {
                 println!("Raise level of user if caller level > {}", $raise_level);
             }
 
-            pub fn le(&self, address1: &Address, address2: &Address) -> bool {
-                $lattice_order(address1, address2)
+            pub fn le(&self, level1: &LatticeElement, level2: &LatticeElement) -> bool {
+                $lattice_order(level1, level2)
+            }
+
+            pub fn get_level(&self, address: &Address) -> LatticeElement {
+                self.map.get(address).unwrap().to_string()
             }
         }
     };
