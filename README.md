@@ -18,3 +18,12 @@ struct MyContractStateStruct {
 Note that in the tests, some additional code is required to simulate the blockchain environment - such as satisfying the type checker on invocations (rather than rpc calls on the chain) - this is simply here to exemplify the extensions, and would not be required in a real blockchain environment.
 
 For further explanation, see the project report.
+
+### File Structure
+- The *"lattice_contract_macro"* folder contains the declarative macro for generating a lattice contract.  
+
+- The *"lattice_macro"* folder contains the procedual macro used to indicate required levels and subscribing to lattice contracts  
+
+- The *"src/lib.rs"* file contains the working example of the project, the CasinoContract implementation.  
+
+- The *"tests* folder contains several tests for the working CasinoContract example implementation.
