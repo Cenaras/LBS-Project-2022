@@ -197,4 +197,5 @@ fn should_fail() {
         &String::from("contract"),
     );
     contract.enter_casino(&mut map, &String::from("0x06"), 1500);
+    contract.hire_person(&mut map, &String::from("0x06"), &String::from("0x06"));
 }

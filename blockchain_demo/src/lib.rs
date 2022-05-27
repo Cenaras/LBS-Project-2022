@@ -15,7 +15,7 @@ fn my_order(a1: &String, a2: &String) -> bool {
         ("top", "contract") => false,
         (_, "contract") => true,
         (_, "top") => true,
-        _ => false,
+        _ => panic!("Element not in lattice"),
     }
 }
 
@@ -34,6 +34,7 @@ gen_lattice_contract!(
 
 // ### LATTICE CONTRACT END ###
 
+// Example of binding a contract to a lattice contract. Macro is applied to the state struct
 #[lattice_address("0x01")]
 pub struct EnterCasinoContract {
     pub test: u32,
@@ -46,6 +47,7 @@ impl EnterCasinoContract {
         self.raise_level(caller_address, &String::from("player"))
     }
 
+    // Require that "contract" flows to caller level
     #[level("contract")]
     pub fn hire_person(&self, person_address: &String) {
         self.raise_level(person_address, &String::from("dealer"))

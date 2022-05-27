@@ -1,8 +1,9 @@
 extern crate paste;
 
+// Macro for generating the lattice contract and needed methods for it.
 #[macro_export]
 macro_rules! gen_lattice_contract {
-    // Check at ting givet med er rigtige typer gennem match
+    // TODO: Match types of params
     ($lattice_name:ident, $lattice_elements:expr, $lattice_order:expr, $raise_level:expr) => {
         use std::collections::HashMap;
         type LatticeElement = String;
@@ -27,9 +28,12 @@ macro_rules! gen_lattice_contract {
                 address: &Address,
                 target_level: &LatticeElement,
             ) {
-                let elements = $lattice_elements;
+                let elements: Vec<String> = $lattice_elements;
                 let bot = String::from("bot");
                 let caller_level = self.map.get(caller_address).unwrap_or(&bot);
+
+                // Only correct lattice elements can be used in map
+                assert!(elements.contains(target_level));
 
                 // Ensure that caller has appropiate level to perform raise_level
                 assert!(self.flows_to($raise_level, caller_level));
@@ -53,8 +57,3 @@ macro_rules! gen_lattice_contract {
         }
     };
 }
-
-// Lattice Contract er et struct med disse methods implemented på det.
-// Struct indeholder mapping fra address til lattice level
-// Der skal være en init function for at "finde ud af" hvem owner af lattice contract er. Eller måske give owner med i macro. Addressen skal sættes til top i mappet - owner.
-// Lattice er en struct med list af elements (strings). Impl method på dette struct, som er vores partial order.
