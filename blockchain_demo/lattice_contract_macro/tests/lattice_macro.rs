@@ -33,5 +33,5 @@ fn macro_test() {
     let mut lattice_contract = MyLatticeContract::new(String::from("0x02"));
     //lattice_contract.deploy_contract(&caller);
     lattice_contract.raise_level(&caller, &target_address, &target_level);
-    assert!(lattice_contract.le(&String::from("contract"), &String::from("contract")));
+    assert!(lattice_contract.flows_to(&String::from("contract"), &String::from("contract")));
 }
