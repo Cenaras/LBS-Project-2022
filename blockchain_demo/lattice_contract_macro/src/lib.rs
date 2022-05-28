@@ -4,7 +4,7 @@ extern crate paste;
 #[macro_export]
 macro_rules! gen_lattice_contract {
     // TODO: Match types of params
-    ($lattice_name:ident, $lattice_elements:expr, $lattice_order:expr, $raise_level:expr) => {
+    ($lattice_name:ident, $lattice_elements:expr, $lattice_order:expr, $set_level:expr) => {
         use std::collections::HashMap;
         type LatticeElement = String;
         type Address = String;
@@ -22,7 +22,7 @@ macro_rules! gen_lattice_contract {
             }
 
             // Raise the level of an address. Use this to deploy contracts, by raising contract level to desired.
-            pub fn raise_level(
+            pub fn set_level(
                 &mut self,
                 caller_address: &Address,
                 address: &Address,
@@ -35,8 +35,8 @@ macro_rules! gen_lattice_contract {
                 // Only correct lattice elements can be used in map
                 assert!(elements.contains(target_level));
 
-                // Ensure that caller has appropiate level to perform raise_level
-                assert!(self.flows_to($raise_level, caller_level));
+                // Ensure that caller has appropiate level to perform set_level
+                assert!(self.flows_to($set_level, caller_level));
                 // Ensure that you cannot raise up to your own level
                 assert!(self.flows_to(target_level, caller_level) && target_level.ne(caller_level));
 

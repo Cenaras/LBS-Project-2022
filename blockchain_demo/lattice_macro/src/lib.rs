@@ -39,10 +39,10 @@ impl Fold for InsertMethodCallArg {
         match &mut folded_e {
             Expr::MethodCall(expr_method_call) => {
                 let ident = expr_method_call.method.clone();
-                let raise_level: Ident = parse_quote! {raise_level};
+                let set_level: Ident = parse_quote! {set_level};
                 let flows_to: Ident = parse_quote! {flows_to};
                 let get_level: Ident = parse_quote! {get_level};
-                if ident == raise_level || ident == flows_to || ident == get_level {
+                if ident == set_level || ident == flows_to || ident == get_level {
                     expr_method_call
                         .args
                         .insert(0, parse_quote! {lattice_contracts});
@@ -88,9 +88,9 @@ pub fn lattice_address(attr: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(quote! {
         #input_struct
         impl #name {
-            fn raise_level(&self, lattice_contracts: &mut HashMap<String, MyLatticeContract>, address: &String, level: &String) {
+            fn set_level(&self, lattice_contracts: &mut HashMap<String, MyLatticeContract>, address: &String, level: &String) {
                 // lattice_contracts.get() simulates a blockchain transaction to the entity present at its argument, i.e. the given lattice contract
-                lattice_contracts.get_mut(&#addr.to_string()).unwrap().raise_level(&self.address, address, level);
+                lattice_contracts.get_mut(&#addr.to_string()).unwrap().set_level(&self.address, address, level);
             }
 
             fn flows_to(&self, lattice_contracts: &mut HashMap<String, MyLatticeContract>, level1: &String, level2: &String) -> bool {

@@ -44,13 +44,13 @@ impl EnterCasinoContract {
     #[level("bot")]
     pub fn enter_casino(&self, amount: u32) {
         assert!(amount > 1000);
-        self.raise_level(caller_address, &String::from("player"))
+        self.set_level(caller_address, &String::from("player"))
     }
 
     // Require that "contract" flows to caller level
     #[level("contract")]
     pub fn hire_person(&self, person_address: &String) {
-        self.raise_level(person_address, &String::from("dealer"))
+        self.set_level(person_address, &String::from("dealer"))
     }
 }
 

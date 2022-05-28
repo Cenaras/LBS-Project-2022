@@ -38,17 +38,17 @@ fn test_casino() {
     };
 
     // Raise contracts to contract level - only owner (0x02) of the lattice can do this
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x03"),
         &String::from("contract"),
     );
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x04"),
         &String::from("contract"),
     );
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x05"),
         &String::from("contract"),
@@ -90,12 +90,12 @@ fn player_cannot_spin_wheel() {
         bids: HashMap::new(),
     };
 
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x03"),
         &String::from("contract"),
     );
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x04"),
         &String::from("contract"),
@@ -129,12 +129,12 @@ fn can_decrease_level() {
         bids: HashMap::new(),
     };
 
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x03"),
         &String::from("contract"),
     );
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x04"),
         &String::from("contract"),
@@ -145,7 +145,7 @@ fn can_decrease_level() {
     roulette_contract.bid_on_number(&mut map, &String::from("0x06"), 42, 4321);
 
     // 0x06 does something suspicious and we dont trust him anymore.
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x06"),
         &String::from("bot"),
@@ -166,12 +166,12 @@ fn it_works() {
     };
 
     // simulating the blockchain getting the correct lattice contract
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"), // This is inferred in the context on the blockchain, and not given as an argument
         &String::from("0x03"),
         &String::from("contract"),
     );
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"), // This is inferred in the context on the blockchain, and not given as an argument
         &String::from("0x06"),
         &String::from("player"),
@@ -191,7 +191,7 @@ fn should_fail() {
         test: 14,
     };
 
-    map.get_mut(&String::from("0x01")).unwrap().raise_level(
+    map.get_mut(&String::from("0x01")).unwrap().set_level(
         &String::from("0x02"),
         &String::from("0x03"),
         &String::from("contract"),
