@@ -16,10 +16,10 @@ use std::collections::HashMap;
 fn test_casino() {
     // This map is simply used to simulate the blockchain having lattice_contracts at addresses
     // replaces the rpc call needed on the blockchain to interact with the lattice contract
-    let mut map: HashMap<String, MyLatticeContract> = HashMap::new();
+    let mut map: HashMap<String, LatticeContract> = HashMap::new();
 
     // Deploy lattice contract. It is put in a map to simulate blockchain addresses
-    let lattice_contract = MyLatticeContract::new(String::from("0x02"));
+    let lattice_contract = LatticeContract::new(String::from("0x02"));
     map.insert(String::from("0x01"), lattice_contract);
 
     // Deploy contracts
@@ -73,10 +73,10 @@ fn test_casino() {
 #[test]
 #[should_panic]
 fn player_cannot_spin_wheel() {
-    let mut map: HashMap<String, MyLatticeContract> = HashMap::new();
+    let mut map: HashMap<String, LatticeContract> = HashMap::new();
 
     // Deploy lattice contract. It is put in a map to simulate blockchain addresses
-    let lattice_contract = MyLatticeContract::new(String::from("0x02"));
+    let lattice_contract = LatticeContract::new(String::from("0x02"));
     map.insert(String::from("0x01"), lattice_contract);
 
     // Deploy contracts
@@ -112,10 +112,10 @@ fn player_cannot_spin_wheel() {
 #[test]
 #[should_panic]
 fn can_decrease_level() {
-    let mut map: HashMap<String, MyLatticeContract> = HashMap::new();
+    let mut map: HashMap<String, LatticeContract> = HashMap::new();
 
     // Deploy lattice contract. It is put in a map to simulate blockchain addresses
-    let lattice_contract = MyLatticeContract::new(String::from("0x02"));
+    let lattice_contract = LatticeContract::new(String::from("0x02"));
     map.insert(String::from("0x01"), lattice_contract);
 
     // Deploy contracts
@@ -156,9 +156,9 @@ fn can_decrease_level() {
 
 #[test]
 fn it_works() {
-    let mut map: HashMap<String, MyLatticeContract> = HashMap::new();
+    let mut map: HashMap<String, LatticeContract> = HashMap::new();
 
-    let lattice_contract = MyLatticeContract::new(String::from("0x02"));
+    let lattice_contract = LatticeContract::new(String::from("0x02"));
     map.insert(String::from("0x01"), lattice_contract);
     let contract = EnterCasinoContract {
         address: String::from("0x03"),
@@ -182,9 +182,9 @@ fn it_works() {
 #[test]
 #[should_panic]
 fn should_fail() {
-    let mut map: HashMap<String, MyLatticeContract> = HashMap::new();
+    let mut map: HashMap<String, LatticeContract> = HashMap::new();
 
-    let lattice_contract = MyLatticeContract::new(String::from("0x02"));
+    let lattice_contract = LatticeContract::new(String::from("0x02"));
     map.insert(String::from("0x01"), lattice_contract);
     let contract = EnterCasinoContract {
         address: String::from("0x03"),

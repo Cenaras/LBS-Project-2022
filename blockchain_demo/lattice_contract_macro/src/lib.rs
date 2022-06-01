@@ -4,17 +4,17 @@ extern crate paste;
 #[macro_export]
 macro_rules! gen_lattice_contract {
     // TODO: Match types of params
-    ($lattice_name:ident, $lattice_elements:expr, $lattice_order:expr, $set_level:expr) => {
+    ($lattice_elements:expr, $lattice_order:expr, $set_level:expr) => {
         use std::collections::HashMap;
         type LatticeElement = String;
         type Address = String;
 
         #[derive(Clone)]
-        pub struct $lattice_name {
+        pub struct LatticeContract {
             map: HashMap<Address, LatticeElement>,
         }
 
-        impl $lattice_name {
+        impl LatticeContract {
             pub fn new(caller_address: Address) -> Self {
                 let mut map = HashMap::new();
                 map.insert(caller_address, String::from("top"));

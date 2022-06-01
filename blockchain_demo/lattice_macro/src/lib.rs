@@ -8,7 +8,7 @@ use syn::{parse_macro_input, parse_quote, Expr, Field, Ident, ItemFn, ItemStruct
 fn insert_arguments(node: &mut ItemFn) {
     node.sig.inputs.insert(
         1,
-        parse_quote! {lattice_contracts: &mut HashMap<String, MyLatticeContract>},
+        parse_quote! {lattice_contracts: &mut HashMap<String, LatticeContract>},
     );
     node.sig
         .inputs
@@ -88,16 +88,16 @@ pub fn lattice_address(attr: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(quote! {
         #input_struct
         impl #name {
-            fn set_level(&self, lattice_contracts: &mut HashMap<String, MyLatticeContract>, address: &String, level: &String) {
+            fn set_level(&self, lattice_contracts: &mut HashMap<String, LatticeContract>, address: &String, level: &String) {
                 // lattice_contracts.get() simulates a blockchain transaction to the entity present at its argument, i.e. the given lattice contract
                 lattice_contracts.get_mut(&#addr.to_string()).unwrap().set_level(&self.address, address, level);
             }
 
-            fn flows_to(&self, lattice_contracts: &mut HashMap<String, MyLatticeContract>, level1: &String, level2: &String) -> bool {
+            fn flows_to(&self, lattice_contracts: &mut HashMap<String, LatticeContract>, level1: &String, level2: &String) -> bool {
                 lattice_contracts.get_mut(&#addr.to_string()).unwrap().flows_to(level1, level2)
             }
 
-            fn get_level(&self, lattice_contracts: &mut HashMap<String, MyLatticeContract>, address: &String) -> String {
+            fn get_level(&self, lattice_contracts: &mut HashMap<String, LatticeContract>, address: &String) -> String {
                 lattice_contracts.get_mut(&#addr.to_string()).unwrap().get_level(address)
             }
         }

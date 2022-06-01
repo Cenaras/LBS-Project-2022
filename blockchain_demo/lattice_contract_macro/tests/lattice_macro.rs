@@ -15,7 +15,6 @@ fn macro_test() {
     }
 
     gen_lattice_contract!(
-        MyLatticeContract,
         vec![
             String::from("top"),
             String::from("contract"),
@@ -30,7 +29,7 @@ fn macro_test() {
     let target_address = String::from("0x03");
     let target_level = String::from("allowed");
 
-    let mut lattice_contract = MyLatticeContract::new(String::from("0x02"));
+    let mut lattice_contract = LatticeContract::new(String::from("0x02"));
     //lattice_contract.deploy_contract(&caller);
     lattice_contract.set_level(&caller, &target_address, &target_level);
     assert!(lattice_contract.flows_to(&String::from("contract"), &String::from("contract")));

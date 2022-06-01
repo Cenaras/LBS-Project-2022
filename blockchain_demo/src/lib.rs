@@ -20,7 +20,6 @@ fn my_order(a1: &String, a2: &String) -> bool {
 }
 
 gen_lattice_contract!(
-    MyLatticeContract,
     vec![
         String::from("top"),
         String::from("contract"),
